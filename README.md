@@ -1,36 +1,204 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Proyecto de Tokenización y Trazabilidad de Cadena de Suministro
 
-## Getting Started
+## Resumen Ejecutivo
+El proyecto consiste en una plataforma descentralizada basada en blockchain que permite la trazabilidad completa de productos desde su origen hasta el consumidor final, utilizando tokens digitales para representar materias primas y productos terminados.
 
-First, run the development server:
+## Objetivo
+Crear un sistema transparente, seguro y descentralizado que permita rastrear el movimiento de materias primas y productos a través de toda la cadena de suministro, garantizando la autenticidad y procedencia de los mismos.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Actores del Sistema
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 1. Productor (Producer)
+- Responsable del ingreso de materias primas al sistema
+- Tokeniza las materias primas originales
+- Solo puede transferir a Fábricas
+- Registra información detallada sobre el origen y características de las materias primas
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2. Fábrica (Factory)
+- Recibe materias primas de los Productores
+- Transforma materias primas en productos terminados
+- Tokeniza los productos terminados
+- Solo puede transferir a Minoristas
+- Registra información sobre el proceso de transformación
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Minorista (Retailer)
+- Recibe productos terminados de las Fábricas
+- Distribuye productos a los consumidores finales
+- Solo puede transferir a Consumidores
+- Gestiona el inventario de productos terminados
 
-## Learn More
+### 4. Consumidor (Consumer)
+- Punto final de la cadena de suministro
+- Recibe productos de los Minoristas
+- Puede verificar toda la trazabilidad del producto
 
-To learn more about Next.js, take a look at the following resources:
+## Funcionalidades Clave
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 1. Gestión de Identidad
+- Cada participante se identifica mediante una dirección única de Ethereum
+- El administrador del sistema registra y valida los participantes
+- Control de acceso basado en roles
+- Autenticación mediante MetaMask
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. Tokenización
+- Materias Primas:
+  * Tokens únicos para cada lote de materia prima
+  * Metadata asociada (origen, características, certificaciones)
+  * Trazabilidad desde el origen
 
-## Deploy on Vercel
+- Productos:
+  * Tokens únicos para productos terminados
+  * Vinculación con tokens de materias primas utilizadas
+  * Información del proceso de transformación
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Sistema de Transferencias
+- Transferencias direccionales según rol
+- Sistema de aceptación/rechazo de transferencias
+- Validación automática de permisos
+- Registro inmutable de cada transferencia
+- Confirmación mediante firma digital
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. Trazabilidad
+- Registro completo del ciclo de vida
+- Visualización de la cadena de custodia
+- Verificación de autenticidad
+- Historia completa de transferencias
+- Registro de transformaciones
+
+## Arquitectura Técnica
+
+### 1. Frontend
+- Framework: Next.js
+- Características:
+  * Interfaz responsive
+  * Paneles específicos por rol
+  * Integración con MetaMask
+  * Visualización de datos en tiempo real
+  * Sistema de notificaciones
+
+### 2. Smart Contracts
+- Framework: Foundry
+- Funcionalidades:
+  * Gestión de roles
+  * Tokenización
+  * Sistema de transferencias
+  * Registro de eventos
+  * Validaciones de seguridad
+
+### 3. Integración Blockchain
+- Red: Ethereum (Sepolia Testnet)
+- Wallet: MetaMask
+- Cliente Web3: ethers.js
+- Características:
+  * Transacciones seguras
+  * Firma digital
+  * Gestión de gas
+  * Manejo de eventos
+
+## Seguridad
+
+### 1. Smart Contracts
+- Validación de roles y permisos
+- Control de acceso granular
+- Prevención de ataques comunes
+- Auditoría de código
+- Tests exhaustivos
+
+### 2. Frontend
+- Validación de inputs
+- Manejo seguro de claves
+- Protección contra ataques XSS
+- Gestión segura de sesiones
+
+### 3. Transaccional
+- Firmas digitales
+- Verificación de transacciones
+- Sistema de respaldo
+- Logs de auditoría
+
+## Despliegue
+
+### 1. Smart Contracts
+- Red: Sepolia Testnet
+- Proceso de verificación
+- Documentación de direcciones
+- Gestión de versiones
+
+### 2. Frontend
+- Plataforma: Vercel
+- Configuración de dominios
+- SSL/TLS
+- Monitoreo y logs
+
+## Beneficios del Sistema
+
+1. **Transparencia**
+   - Trazabilidad completa
+   - Información verificable
+   - Historia inmutable
+
+2. **Seguridad**
+   - Datos inmutables
+   - Transacciones verificadas
+   - Control de acceso
+
+3. **Eficiencia**
+   - Automatización de procesos
+   - Reducción de errores
+   - Gestión en tiempo real
+
+4. **Confianza**
+   - Verificación de origen
+   - Autenticidad garantizada
+   - Responsabilidad demostrable
+
+## Fases de Implementación
+
+### Fase 1: Desarrollo Base
+- Implementación de smart contracts
+- Desarrollo de frontend básico
+- Sistema de autenticación
+- Tests unitarios
+
+### Fase 2: Funcionalidades Avanzadas
+- Sistema de notificaciones
+- Reportes avanzados
+- Métricas y analytics
+- Tests de integración
+
+### Fase 3: Optimización
+- Mejoras de UX/UI
+- Optimización de gas
+- Escalabilidad
+- Documentación completa
+
+## Mantenimiento y Soporte
+
+1. **Monitoreo**
+   - Estado de la red
+   - Rendimiento
+   - Errores y alertas
+
+2. **Actualizaciones**
+   - Parches de seguridad
+   - Mejoras funcionales
+   - Optimizaciones
+
+3. **Soporte**
+   - Documentación técnica
+   - Guías de usuario
+   - Soporte técnico
+
+## Métricas de Éxito
+
+1. **Técnicas**
+   - Tiempo de respuesta
+   - Tasa de éxito de transacciones
+   - Cobertura de tests
+
+2. **Negocio**
+   - Adopción por usuarios
+   - Volumen de transacciones
+   - Satisfacción de usuarios
+
+Este proyecto representa una solución completa para la trazabilidad en cadenas de suministro, combinando la seguridad de blockchain con una experiencia de usuario intuitiva y eficiente.
