@@ -88,7 +88,7 @@ export default function TraceTokenPage() {
 
   
   return (
-    <Card className="w-3/4">
+    <Card className="w-5/6">
       <CardHeader>
         <CardTitle>Token Transfer History</CardTitle>
       </CardHeader>

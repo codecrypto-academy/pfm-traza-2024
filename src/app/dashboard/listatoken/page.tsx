@@ -61,7 +61,9 @@ export default function ListaTokenPage() {
           name: token.name,
           features: token.features,
           creator: token.creator,
-          timestamp: token.timestamp.toString(),
+          timestamp: new Date(
+            Number(token.timestamp) * 1000
+          ).toLocaleString(),
           parentTokenId: token.parentTokenId.toString(),
           amount: token.amount.toString(),
         }));
@@ -98,7 +100,16 @@ export default function ListaTokenPage() {
                     <div className="flex flex-col gap-2">
                       <p className="font-medium">Token ID: {token.id}</p>
                       <p className="font-medium">Nombre: {token.name}</p>
-                      <p className="font-medium">Features: {token.features}</p>
+                      <ul className="font-medium">
+                        Features:{" "}
+                          {token.features
+                            .split("|")
+                          .map((linea, index) => (
+                            <li className="ml-20" key={index}>
+                               {index + 1}. {linea}
+                            </li>
+                          ))}
+                      </ul>
                       <p className="font-medium">Creador: {token.creator}</p>
                       <p className="font-medium">
                         Timestamp: {token.timestamp}

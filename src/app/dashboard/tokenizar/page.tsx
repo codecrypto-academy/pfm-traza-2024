@@ -56,7 +56,7 @@ export default function TokenizarPage() {
       const tx = await contract.createToken(
         formData.name,
         ethers.parseUnits(formData.amount, "ether"),
-        formData.features,
+        formData.features.replace(/\n/g, "|"),
         tokenId ? BigInt(tokenId) : BigInt(0) // parentTokenId - assuming 0 as default, modify as needed
       );
 
