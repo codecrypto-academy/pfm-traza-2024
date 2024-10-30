@@ -2,6 +2,8 @@ import tokenizar from "@/lib/tokenizar.txt";
 import user from "@/lib/user.txt";
 import TOKENIZAR_ABI from "@/lib/contracts/Tokenizar.json";
 import USER_ABI from "@/lib/contracts/UserContract.json";
+import { ethers } from "ethers";
+import { User, Participant } from "@/lib/types";
 
 export function getDeployedTo(contract: string): {ADDRESS: string , ABI: object}  {
     if (contract === "tokenizarContract") {
@@ -14,3 +16,35 @@ export function getDeployedTo(contract: string): {ADDRESS: string , ABI: object}
     }
     return {ADDRESS: "contract not found", ABI: {}};
 }
+
+
+export const fetchUsers = async (): Promise<User[]> =>  {
+    if (!window.ethereum)
+         return [];
+    const {ADDRESS, ABI} = getDeployedTo("userContract");
+    try {
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      
+      const contractAddress = ADDRESS;
+      const contractABI = ABI;
+      const contract = new ethers.Contract(
+        contractAddress,
+        contractABI as any,
+        provider
+      );
+
+      const participants = await contract.getParticipants();
+
+      const formattedUsers: User[] = participants.map(
+        (participant: Participant) => ({
+          address: participant.userAddress,
+          name: participant.name,
+          role: participant.role,
+        })
+      );
+      return formattedUsers;
+    } catch (error) {
+      throw error;
+    }
+  };

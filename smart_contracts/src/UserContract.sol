@@ -17,6 +17,12 @@ contract UserContract {
 
     constructor() {
         owner = msg.sender;
+        participants.push(Participant({
+            userAddress: owner,
+            name: "Owner",
+            role: "admin",
+            isActive: true
+        }));
     }
 
     modifier onlyOwner() {

@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { User, Participant } from "@/lib/types";
 import {
   Card,
   CardContent,
@@ -13,7 +14,8 @@ import {
 } from "@/components/ui/card";
 import { ethers } from "ethers";
 import { useSearchParams } from "next/navigation";
-
+import { fetchUsers } from "@/lib/clientLib";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { getDeployedTo } from "@/lib/clientLib";
 
 const { ADDRESS, ABI } = getDeployedTo("tokenizarContract");
@@ -21,16 +23,46 @@ if (!ADDRESS || !ABI) {
   throw new Error("Tokenizar contract not found");
 }
 
+const rolesTransfer: Record<string, string[]> = {
+  producer: ["factory"],
+  factory: ["retailer"],
+  retailer: ["consumer"],
+};
 export default function TransferPage() {
+  const { user } = useGlobalContext();
   const searchParams = useSearchParams();
   const tokenId = searchParams.get("tokenId");
   const balance = searchParams.get("amount");
 
   const [formData, setFormData] = useState({
+    tokenId: tokenId,
     amount: 0,
     toAddress: "",
   });
+
   const { toast } = useToast();
+
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const loadParticipants = async () => {
+      try {
+        const users: User[] = await fetchUsers();
+        const filteredUsers = users.filter((u) =>
+          rolesTransfer[user?.role as string].includes(u.role)
+        );
+        setUsers(filteredUsers);
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to load participants",
+        });
+      }
+    };
+
+    loadParticipants();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,6 +109,7 @@ export default function TransferPage() {
       setFormData({
         amount: 0,
         toAddress: "",
+        tokenId: tokenId,
       });
     } catch (error) {
       console.error(error);
@@ -94,22 +127,29 @@ export default function TransferPage() {
         <CardTitle>Transfer Token</CardTitle>
         <CardDescription>
           <span> idToken: {tokenId}</span>
-          <span> balance: {balance}</span>
+          <span> balance: {ethers.formatUnits(balance || "0", "ether")}</span>
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="toAddress">Recipient Address</Label>
-            <Input
+            <Label htmlFor="toAddress">Select Recipient</Label>
+            <select
               id="toAddress"
               value={formData.toAddress}
               onChange={(e) =>
                 setFormData({ ...formData, toAddress: e.target.value })
               }
-              placeholder="0x..."
+              className="w-full px-3 py-2 border rounded-md"
               required
-            />
+            >
+              <option value="">Select a recipient...</option>
+              {users?.map((user) => (
+                <option key={user.address} value={user.address}>
+                  {user.name} ({user.role}) - {user.address}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="space-y-2">

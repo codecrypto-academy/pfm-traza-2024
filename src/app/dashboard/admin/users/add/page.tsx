@@ -13,7 +13,9 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ethers } from "ethers";
+import { getDeployedTo } from "@/lib/clientLib";
 
+const { ADDRESS, ABI } = getDeployedTo("userContract");
 
 export default function AddUserPage() {
   const [address, setAddress] = useState("");
@@ -45,9 +47,9 @@ export default function AddUserPage() {
       // This is a basic example - adjust according to your contract's ABI and address
       const provider = new ethers.BrowserProvider(window.ethereum)
       const signer = await provider.getSigner();
-      const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+      const contractAddress = ADDRESS;
 
-      const contractABI = (await import("@/lib/contracts/UserContract.json")).default;
+      const contractABI = ABI as any;
       // const contractABI = ["function addParticipante(address _address, string memory _name, string memory _role)"];
       const contract = new ethers.Contract(contractAddress, contractABI, signer);
 

@@ -8,27 +8,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const { ADDRESS, ABI } = getDeployedTo("tokenizarContract");
-interface Token {
-  id: string;
-  balance: string;
-  name: string;
-  features: string;
-  creator: string;
-  timestamp: string;
-  parentTokenId: string;
-  amount: string;
-}
-
-interface TokenSalida {
-  id: bigint;
-  balance: bigint;
-  name: string;
-  features: string;
-  creator: string;
-  timestamp: bigint;
-  parentTokenId: bigint;
-  amount: bigint;
-}
+import { Token, TokenSalida } from "@/lib/types";
 
 export default function ListaTokenPage() {
   const [tokens, setTokens] = useState<Token[]>([]);

@@ -3,18 +3,13 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { getDeployedTo } from "@/lib/clientLib";
 
-interface User {
-  address: string;
-  name: string;
-  role: string;
-  connected: boolean;
-}
-interface Participant {
-  userAddress: string;
-  name: string;
-  role: string;
-}
+const {ADDRESS, ABI} = getDeployedTo("userContract");
+import { User, Participant } from "@/lib/types";
+
+
 export default function UserList() {
   const [users, setUsers] = useState<User[]>([]);
   const [metaMaskUser, setMetaMaskUser] = useState<string[]>([]);
@@ -24,14 +19,14 @@ export default function UserList() {
       if (!window.ethereum) return;
 
       try {
+
         const provider = new ethers.BrowserProvider(window.ethereum);
         
-        const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-        const contractABI = (await import("@/lib/contracts/UserContract.json"))
-          .default;
+        const contractAddress = ADDRESS;
+        const contractABI = ABI;
         const contract = new ethers.Contract(
           contractAddress,
-          contractABI,
+          contractABI as any,
           provider
         );
 

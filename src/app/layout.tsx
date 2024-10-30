@@ -3,7 +3,7 @@ import { Header } from "@/components/app/Header";
 import { Toaster } from "@/components/ui/toaster";
 import localFont from "next/font/local";
 import "./globals.css";
-
+import { GlobalContextProvider } from "@/context/GlobalContext";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -30,9 +30,11 @@ export default function RootLayout({
       <body
         className={`p-5  ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header />
-        {children}
-        <Toaster />
+        <GlobalContextProvider>
+          <Header />
+          {children}
+          <Toaster />
+        </GlobalContextProvider>
       </body>
     </html>
   );

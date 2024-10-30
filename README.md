@@ -1,4 +1,5 @@
-# Proyecto de Tokenización y Trazabilidad de Cadena de Suministro
+# PFM WEB 3.Tokenización y Trazabilidad
+https://github.com/codecrypto-academy/pfm-traza-2024
 
 ## Resumen Ejecutivo
 El proyecto consiste en una plataforma descentralizada basada en blockchain que permite la trazabilidad completa de productos desde su origen hasta el consumidor final, utilizando tokens digitales para representar materias primas y productos terminados.
