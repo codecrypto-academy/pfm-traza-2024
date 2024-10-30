@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ethers } from "ethers";
+import { ethers, Interface } from "ethers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDeployedTo } from "@/lib/clientLib";
 import { useSearchParams } from "next/navigation";
@@ -13,28 +13,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import { Transfer, TransferData } from "@/lib/types";
 const { ADDRESS, ABI } = getDeployedTo("tokenizarContract");
 
-interface Transfer {
-  id: string;
-  tokenId: string;
-  from: string;
-  to: string;
-  amount: string;
-  timestamp: string;
-  status: number;
-}
 
-interface TransferData {
-  id: bigint;
-  tokenId: bigint;
-  from: string;
-  to: string;
-  amount: bigint;
-  timestamp: bigint;
-  status: number;
-}
 
 export default function TraceTokenPage() {
   const [transfers, setTransfers] = useState<Transfer[]>([]);
@@ -56,7 +38,11 @@ export default function TraceTokenPage() {
       try {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
-        const contract = new ethers.Contract(ADDRESS, ABI as any, signer);
+        const contract = new ethers.Contract(
+          ADDRESS,
+          ABI as Interface,
+          signer
+        );
 
         const transferData = await contract.getTokenTrace(tokenId);
 

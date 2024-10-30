@@ -12,7 +12,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ethers } from "ethers";
+import { ethers, Interface } from "ethers";
 import { getDeployedTo } from "@/lib/clientLib";
 
 const { ADDRESS, ABI } = getDeployedTo("userContract");
@@ -49,9 +49,9 @@ export default function AddUserPage() {
       const signer = await provider.getSigner();
       const contractAddress = ADDRESS;
 
-      const contractABI = ABI as any;
+      const contractABI = ABI;
       // const contractABI = ["function addParticipante(address _address, string memory _name, string memory _role)"];
-      const contract = new ethers.Contract(contractAddress, contractABI, signer);
+      const contract = new ethers.Contract(contractAddress, contractABI as Interface, signer);
 
       const tx = await contract.addParticipante(address, name, role);
       await tx.wait();

@@ -1,17 +1,18 @@
 "use client";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/context/GlobalContext";
+import Link from "next/link";
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const router = useRouter();
+  
   const { user } = useGlobalContext();
-
-  const opciones: { [key: string]: any[] } = {
+  interface Option {
+    href:string
+    label:string
+  }
+  const opciones: { [key: string]: Option[] } = {
     admin: [{ href: "/dashboard/admin/users", label: "Users Management" }],
     producer: [
       { href: "/dashboard/tokenizar", label: "Tokenizar" },
@@ -65,7 +66,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
         <nav className="p-4">
           <ul className="space-y-2">
-            {opciones[user.role].map((item: any) => (
+            {opciones[user.role].map((item: Option) => (
               <li key={item.href}>
                 <Link
                   href={item.href}

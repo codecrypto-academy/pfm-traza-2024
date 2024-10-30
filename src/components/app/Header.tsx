@@ -1,12 +1,9 @@
 "use client";
-import React from "react";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { getDeployedTo } from "@/lib/clientLib";
 import { ethers } from "ethers";
-import { useGlobalContext } from "@/context/GlobalContext";
+import { useRouter } from "next/navigation";
 const { ADDRESS, ABI } = getDeployedTo("userContract");
 declare global {
   interface Window {
@@ -27,7 +24,7 @@ interface User {
 }
 export function Header() {
   const { user, setUser } = useGlobalContext();
-  const { toast } = useToast();
+  
 
   const router = useRouter();
 

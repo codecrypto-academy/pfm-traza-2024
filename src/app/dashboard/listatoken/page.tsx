@@ -1,16 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ethers } from "ethers";
+import { ethers, Interface } from "ethers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDeployedTo } from "@/lib/clientLib";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-
+import { useGlobalContext } from "@/context/GlobalContext";
 const { ADDRESS, ABI } = getDeployedTo("tokenizarContract");
 import { Token, TokenSalida } from "@/lib/types";
 
 export default function ListaTokenPage() {
+  const { user } = useGlobalContext();
   const [tokens, setTokens] = useState<Token[]>([]);
   const { toast } = useToast();
 
@@ -28,8 +29,7 @@ export default function ListaTokenPage() {
       try {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const contract = new ethers.Contract(ADDRESS, ABI as any, signer);
+        const contract = new ethers.Contract(ADDRESS, ABI as Interface, signer);
 
         const tokenSalidas = await contract.getAddressTokens(
           await signer.getAddress()
@@ -41,9 +41,7 @@ export default function ListaTokenPage() {
           name: token.name,
           features: token.features,
           creator: token.creator,
-          timestamp: new Date(
-            Number(token.timestamp) * 1000
-          ).toLocaleString(),
+          timestamp: new Date(Number(token.timestamp) * 1000).toLocaleString(),
           parentTokenId: token.parentTokenId.toString(),
           amount: token.amount.toString(),
         }));
@@ -62,7 +60,7 @@ export default function ListaTokenPage() {
 
     loadTokens();
   }, [toast]);
-
+  if (!user) return null;
   return (
     <Card className="max-w-2xl mx-auto">
       <CardHeader>
@@ -82,13 +80,11 @@ export default function ListaTokenPage() {
                       <p className="font-medium">Nombre: {token.name}</p>
                       <ul className="font-medium">
                         Features:{" "}
-                          {token.features
-                            .split("|")
-                          .map((linea, index) => (
-                            <li className="ml-20" key={index}>
-                               {index + 1}. {linea}
-                            </li>
-                          ))}
+                        {token.features.split("|").map((linea, index) => (
+                          <li className="ml-20" key={index}>
+                            {index + 1}. {linea}
+                          </li>
+                        ))}
                       </ul>
                       <p className="font-medium">Creador: {token.creator}</p>
                       <p className="font-medium">
@@ -100,10 +96,10 @@ export default function ListaTokenPage() {
                         </p>
                       )}
                       <p className="font-medium">
-                        Amount Tokenizado: {token.amount}
+                        Amount Tokenizado: {Number(token.amount) / 10 ** 18}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        Balance: {token.balance}
+                        Balance: {Number(token.balance) / 10 ** 18}
                       </p>
 
                       <div className="flex gap-2">
@@ -119,17 +115,19 @@ export default function ListaTokenPage() {
                           <Link
                             href={`/dashboard/traceToken?tokenId=${token.id}`}
                           >
-                            Trace
+                            Trace {user.role}
                           </Link>
                         </Button>
-
-                        <Button variant="outline">
-                          <Link
-                            href={`/dashboard/tokenizar?tokenId=${token.id}`}
-                          >
-                            Crear Tokens
-                          </Link>
-                        </Button>
+                        {user &&
+                          ["factory", "producer"].includes(user.role) && (
+                            <Button variant="outline">
+                              <Link
+                                href={`/dashboard/tokenizar?tokenId=${token.id}`}
+                              >
+                                Crear Tokens
+                              </Link>
+                            </Button>
+                          )}
                       </div>
                     </div>
                   </div>

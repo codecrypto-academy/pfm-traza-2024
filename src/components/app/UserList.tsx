@@ -1,13 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import { useGlobalContext } from "@/context/GlobalContext";
 import { getDeployedTo } from "@/lib/clientLib";
+import { Participant, User } from "@/lib/types";
+import { ethers, Interface } from "ethers";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const {ADDRESS, ABI} = getDeployedTo("userContract");
-import { User, Participant } from "@/lib/types";
 
 
 export default function UserList() {
@@ -26,7 +25,7 @@ export default function UserList() {
         const contractABI = ABI;
         const contract = new ethers.Contract(
           contractAddress,
-          contractABI as any,
+          contractABI as Interface,
           provider
         );
 

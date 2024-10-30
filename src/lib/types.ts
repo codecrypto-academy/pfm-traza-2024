@@ -30,3 +30,23 @@ export interface TokenSalida {
   parentTokenId: bigint;
   amount: bigint;
 }
+
+export interface Transfer {
+  id: string;
+  tokenId: string;
+  from: string;
+  to: string;
+  amount: string;
+  timestamp: string;
+  status: number;
+}
+
+export interface TransferData {
+  id: bigint;
+  tokenId: bigint;
+  from: string;
+  to: string;
+  amount: bigint;
+  timestamp: bigint;
+  status: number;
+}

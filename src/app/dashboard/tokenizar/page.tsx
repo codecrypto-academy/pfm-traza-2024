@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ethers } from "ethers";
+import { ethers, Interface } from "ethers";
 
 import { getDeployedTo } from "@/lib/clientLib";
 import { useSearchParams } from "next/navigation";
@@ -50,8 +50,11 @@ export default function TokenizarPage() {
       if (!ADDRESS || !ABI) {
         throw new Error("Tokenizar contract not found");
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const contract = new ethers.Contract(ADDRESS, ABI as any, signer);
+      const contract = new ethers.Contract(
+        ADDRESS,
+        ABI as Interface,
+        signer
+      );
 
       const tx = await contract.createToken(
         formData.name,

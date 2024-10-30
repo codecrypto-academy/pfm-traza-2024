@@ -1,13 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.txt$/,
-      use: 'raw-loader'
-    });
-    return config;
+
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    config.module.rules.push(
+      {
+        test: /\.txt$/,
+        // This is the asset module.
+        type: 'asset/source',
+      }
+    )
+    return config
   },
+
+
+  
   /* config options here */
 };
 

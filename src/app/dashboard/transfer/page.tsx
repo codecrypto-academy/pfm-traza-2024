@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User, Participant } from "@/lib/types";
+import { User } from "@/lib/types";
 import {
   Card,
   CardContent,
@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ethers } from "ethers";
+import { ethers, Interface } from "ethers";
 import { useSearchParams } from "next/navigation";
 import { fetchUsers } from "@/lib/clientLib";
 import { useGlobalContext } from "@/context/GlobalContext";
@@ -36,7 +36,7 @@ export default function TransferPage() {
 
   const [formData, setFormData] = useState({
     tokenId: tokenId,
-    amount: 0,
+    amount: "",
     toAddress: "",
   });
 
@@ -62,7 +62,7 @@ export default function TransferPage() {
     };
 
     loadParticipants();
-  }, []);
+  }, [toast, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,8 +89,7 @@ export default function TransferPage() {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const contract = new ethers.Contract(ADDRESS, ABI as any, signer);
+      const contract = new ethers.Contract(ADDRESS, ABI as Interface, signer);
 
       const tx = await contract.transferToken(
         tokenId,
@@ -107,7 +106,7 @@ export default function TransferPage() {
 
       // Reset form
       setFormData({
-        amount: 0,
+        amount: "0",
         toAddress: "",
         tokenId: tokenId,
       });
@@ -158,7 +157,7 @@ export default function TransferPage() {
               id="amount"
               type="number"
               step="any"
-              max={balance}
+              max={balance || "0"}
               value={formData.amount}
               onChange={(e) =>
                 setFormData({ ...formData, amount: e.target.value })

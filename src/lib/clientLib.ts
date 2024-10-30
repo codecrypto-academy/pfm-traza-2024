@@ -1,8 +1,10 @@
+
+
 import tokenizar from "@/lib/tokenizar.txt";
 import user from "@/lib/user.txt";
 import TOKENIZAR_ABI from "@/lib/contracts/Tokenizar.json";
 import USER_ABI from "@/lib/contracts/UserContract.json";
-import { ethers } from "ethers";
+import { ethers, Interface } from "ethers";
 import { User, Participant } from "@/lib/types";
 
 export function getDeployedTo(contract: string): {ADDRESS: string , ABI: object}  {
@@ -30,7 +32,7 @@ export const fetchUsers = async (): Promise<User[]> =>  {
       const contractABI = ABI;
       const contract = new ethers.Contract(
         contractAddress,
-        contractABI as any,
+        contractABI as Interface,
         provider
       );
 
