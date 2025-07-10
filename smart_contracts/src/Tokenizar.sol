@@ -75,8 +75,7 @@ contract Tokenizar {
     }
 
     constructor() {
-        
-        nextTokenId = 1;
+        nextTokenId = 0;
         nextTransferId = 0;
     }
 

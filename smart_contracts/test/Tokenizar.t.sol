@@ -21,9 +21,8 @@ contract TestTokenizar is Test {
         );
         assertEq(tokenId, 0);
     }
+
     function test_getAddressTokens() public {
-        
-        
         uint256 tokenId = tokenizar.createToken(
             "Token 1 ",
             100,
